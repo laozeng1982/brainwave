@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.embed.swing.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="794.0" prefWidth="1223.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="brainwave.FXMLDocumentController">
+   <children>
+      <MenuBar layoutY="14.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#onOpenAscii" text="Open Ascii" />
+                  <MenuItem mnemonicParsing="false" onAction="#onOpenDb" text="Open DataBase" />
+                  <MenuItem mnemonicParsing="false" onAction="#onExit" text="Exit" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Jobs">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#onRun" text="Run" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Views">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#onAddTab" text="Add" />
+                  <MenuItem mnemonicParsing="false" text="Options" />
+               </items>
+            </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <ToolBar layoutY="25.0" prefHeight="35.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+        <items>
+          <Button mnemonicParsing="false" onAction="#onOpenAscii" text="Ascii" />
+            <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#onOpenDb" text="DB" />
+            <Separator orientation="VERTICAL" prefHeight="30.0" />
+            <Button layoutX="58.0" layoutY="14.0" mnemonicParsing="false" onAction="#onRun" text="Run" />
+            <Separator layoutX="94.0" layoutY="10.0" orientation="VERTICAL" prefHeight="30.0" />
+            <Button layoutX="104.0" layoutY="14.0" mnemonicParsing="false" text="Test" />
+            <Separator layoutX="147.0" layoutY="10.0" orientation="VERTICAL" prefHeight="30.0" />
+            <ToggleButton fx:id="pointTglBtn" mnemonicParsing="false" onAction="#onMouseType" selected="true" text="Pointer">
+               <toggleGroup>
+                  <ToggleGroup fx:id="zoomToggle" />
+               </toggleGroup>
+            </ToggleButton>
+            <ToggleButton fx:id="zoomInTglBtn" mnemonicParsing="false" onAction="#onMouseType" text="ZoomIn" toggleGroup="$zoomToggle" />
+            <ToggleButton fx:id="zoomOutTglBtn" layoutX="274.0" layoutY="14.0" mnemonicParsing="false" onAction="#onMouseType" text="ZoomOut" toggleGroup="$zoomToggle" />
+            <ComboBox fx:id="cmBxScale" editable="true" prefHeight="23.0" prefWidth="72.0" />
+            <Separator layoutX="202.0" layoutY="10.0" orientation="VERTICAL" prefHeight="30.0" />
+            <Button layoutX="157.0" layoutY="14.0" mnemonicParsing="false" onAction="#onExit" text="Exit" textFill="#f80505" />
+        </items>
+      </ToolBar>
+      <AnchorPane layoutX="6.0" layoutY="60.0" prefHeight="734.0" prefWidth="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="60.0">
+         <children>
+            <TreeView fx:id="dateSetsTreeView" layoutY="41.0" prefHeight="337.0" prefWidth="175.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="22.0" />
+            <Label layoutX="8.0" layoutY="7.0" text="DataSets" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font name="Arial Black" size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="228.0" layoutY="97.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="180.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
+         <children>
+            <TabPane fx:id="drawTablePane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="ALL_TABS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="BrainWave.jnlp">
+  <information>
+    <title>BrainWave</title>
+    <vendor>JianGe</vendor>
+    <description>null</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="BrainWave.jar" size="785851" download="eager" />
+    <jar href="lib/ChartDirector.jar" size="2320299" download="eager" />
+    <jar href="lib/Tools.jar" size="263480" download="eager" />
+    <jar href="lib/commons-beanutils-1.7.0.jar" size="188671" download="eager" />
+    <jar href="lib/commons-collections-3.2.jar" size="571259" download="eager" />
+    <jar href="lib/commons-lang-2.4.jar" size="261809" download="eager" />
+    <jar href="lib/commons-logging-1.1.jar" size="52915" download="eager" />
+    <jar href="lib/ezmorph-1.0.4.jar" size="86381" download="eager" />
+    <jar href="lib/hamcrest-core-1.3.jar" size="45024" download="eager" />
+    <jar href="lib/jcommon-1.0.23.jar" size="330246" download="eager" />
+    <jar href="lib/jfreechart-1.0.19-experimental.jar" size="13796" download="eager" />
+    <jar href="lib/jfreechart-1.0.19-swt.jar" size="79793" download="eager" />
+    <jar href="lib/jfreechart-1.0.19.jar" size="1570157" download="eager" />
+    <jar href="lib/jfreesvg-2.0.jar" size="50769" download="eager" />
+    <jar href="lib/json-lib-2.2.3-jdk13.jar" size="148271" download="eager" />
+    <jar href="lib/junit-4.11.jar" size="245039" download="eager" />
+    <jar href="lib/orsoncharts-1.4-eval-nofx.jar" size="445025" download="eager" />
+    <jar href="lib/orsonpdf-1.6-eval.jar" size="72444" download="eager" />
+    <jar href="lib/pinyin4j-2.5.0.jar" size="188920" download="eager" />
+    <jar href="lib/servlet.jar" size="80054" download="eager" />
+    <jar href="lib/sqlite-jdbc-3.8.11.2.jar" size="5575351" download="eager" />
+    <jar href="lib/swtgraphics2d.jar" size="17492" download="eager" />
+  </resources>
+  <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="BrainWave" >
+    <param name="requiredFXVersion" value="8.0+"/>
+  </applet-desc>
+  <jfx:javafx-desc  width="800" height="600" main-class="brainwave.BrainWave"  name="BrainWave" />
+  <update check="always"/>
+</jnlp>
