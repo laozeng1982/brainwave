@@ -17,6 +17,7 @@ import ChartDirector.ViewPortAdapter;
 import ChartDirector.ViewPortChangedEvent;
 import ChartDirector.ViewPortControl;
 import ChartDirector.XYChart;
+import brainwave.FXMLDocumentController;
 import datamodel.SingleFileCurveSets;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -25,11 +26,14 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.AnchorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileFilter;
+import sun.plugin.javascript.navig.Anchor;
 import tools.utilities.Logs;
 
 /**
@@ -58,6 +62,12 @@ public class CurvePloter extends JPanel {
     // This flag is used to suppress event handlers before complete initialization
     private boolean hasFinishedInitialization;
 
+    private int startXposition = 60;
+
+    private String startPoint;
+    private String endPoint;
+    private int shownPoint;
+
     private String chartTitle;
 
     //
@@ -80,7 +90,7 @@ public class CurvePloter extends JPanel {
         if (title == null || title.isEmpty()) {
             this.chartTitle = "   Zooming and Scrolling with Viewport Control";
         } else {
-            this.chartTitle = title;
+            this.chartTitle = title + " --> ( " + singleFileCurveSets.getLastAddCurveInfo().size() + " Points )";
         }
 
         this.setPreferredSize(preferSize);
@@ -201,22 +211,25 @@ public class CurvePloter extends JPanel {
     // Draw the chart.
     //
     private void drawChart(ChartViewer viewer) {
-        // Get the start date and end date that are visible on the chart.
 
-        Logs.e(" viewer.getValueAtViewPort: " + viewer.getValueAtViewPort("x", viewer.getViewPortLeft()) + ", viewer.getViewPortLeft(): " + viewer.getViewPortLeft());
-        Logs.e("viewer.getViewPortWidth(): " + viewer.getViewPortWidth());
+        // Get the start date and end date that are visible on the chart.
+//        Logs.e(" viewer.getValueAtViewPort: " + viewer.getValueAtViewPort("x", viewer.getViewPortLeft()) + ", viewer.getViewPortLeft(): " + viewer.getViewPortLeft());
+//        Logs.e("viewer.getViewPortWidth(): " + viewer.getViewPortWidth());
         double viewPortStart = (double) viewer.getValueAtViewPort("x", viewer.getViewPortLeft());
         double viewPortEnd = (double) viewer.getValueAtViewPort("x", viewer.getViewPortLeft() + viewer.getViewPortWidth());
 
-        Logs.e("viewPortStart: " + viewPortStart + ", viewPortEnd: " + viewPortEnd);
+//        Logs.e("viewPortStart: " + viewPortStart + ", viewPortEnd: " + viewPortEnd);
         // Get the array indexes that corresponds to the visible start and end dates
         int startIndex = (int) Math.floor(Chart.bSearch(xAxis, viewPortStart));
         int endIndex = (int) Math.ceil(Chart.bSearch(xAxis, viewPortEnd));
         int noOfPoints = endIndex - startIndex + 1;
+        startPoint = String.valueOf(startIndex);
+        endPoint = String.valueOf(endIndex);
+        shownPoint = noOfPoints;
         Logs.e("startIndex: " + startIndex + ", endIndex: " + endIndex + ", noOfPoints: " + noOfPoints);
 
         // Extract the part of the data array that are visible.
-        double[] viewPortTimeStamps = (double[]) Chart.arraySlice(xAxis, startIndex, noOfPoints);
+        double[] viewPortTimeStampsCnt = (double[]) Chart.arraySlice(xAxis, startIndex, noOfPoints);
 
         double[][] viewPortDataSeries = new double[dataSeries.length][];
         for (int i = 1; i < dataSeries.length; i++) {
@@ -235,7 +248,7 @@ public class CurvePloter extends JPanel {
         // Set the plotarea at (55, 55) with width 80 pixels less than chart width, and height 90 pixels
         // less than chart height. Use a vertical gradient from light blue (f0f6ff) to sky blue (a0c0ff)
         // as background. Set border to transparent and grid lines to white (ffffff).
-        c.setPlotArea(55, 55, c.getWidth() - 80, c.getHeight() - 90, c.linearGradientColor(0, 55, 0,
+        c.setPlotArea(startXposition, 55, c.getWidth() - 80, c.getHeight() - 90, c.linearGradientColor(0, 55, 0,
                 c.getHeight() - 35, 0xf0f6ff, 0xa0c0ff), -1, Chart.Transparent, 0xffffff, 0xffffff);
 
         // As the data can lie outside the plotarea in a zoomed chart, we need enable clipping.
@@ -255,7 +268,7 @@ public class CurvePloter extends JPanel {
         c.yAxis().setLabelStyle("Arial", 10);
 
         // Add axis title using 10pt Arial Bold font
-        c.yAxis().setTitle("Ionic Temperature (C)", "Arial Bold", 10);
+        c.yAxis().setTitle("BrainWave Amplitude", "Arial Bold", 10);
 
         //================================================================================
         // Add data to chart
@@ -275,14 +288,11 @@ public class CurvePloter extends JPanel {
 
         // Now we add the 3 data series to a line layer, using the color red (ff33333), green (008800)
         // and blue (3333cc)
-        layer.setXData(viewPortTimeStamps);
+        layer.setXData(viewPortTimeStampsCnt);
         for (int i = 1; i < dataSeries.length; i++) {
             layer.addDataSet(viewPortDataSeries[i], 0xff3333, "Alpha");
 
         }
-//        layer.addDataSet(viewPortDataSeriesA, 0xff3333, "Alpha");
-//        layer.addDataSet(viewPortDataSeriesB, 0x008800, "Beta");
-//        layer.addDataSet(viewPortDataSeriesC, 0x3333cc, "Gamma");
 
         //================================================================================
         // Configure axis scale and labelling
@@ -330,7 +340,22 @@ public class CurvePloter extends JPanel {
         // in the MouseMovePlotArea event. Otherwise, we need to update the track line here.
         if (!viewer.isInMouseMoveEvent()) {
             trackLineLegend(c, (null == viewer.getChart()) ? c.getPlotArea().getRightX()
-                    : viewer.getPlotAreaMouseX());
+                    : viewer.getPlotAreaMouseX(), (null == viewer.getChart()) ? c.getPlotArea().getRightX()
+                    : viewer.getPlotAreaMouseY());
+        }
+//FXMLDocumentController.showPoints(noOfPoints);
+
+        for (int i = 0; i < brainwave.BrainWave.root.getChildrenUnmodifiable().size(); i++) {
+//            brainwave.BrainWave.
+            if (brainwave.BrainWave.root.getChildrenUnmodifiable().get(i).toString().contains("ToolBar")) {
+                ToolBar toolBar = (ToolBar) brainwave.BrainWave.root.getChildrenUnmodifiable().get(i);
+                for (int j = 0; j < toolBar.getChildrenUnmodifiable().size(); j++) {
+                    Logs.e(toolBar.getChildrenUnmodifiable().toString());
+//                    if (toolBar.getChildrenUnmodifiable()) {
+//                        
+//                    }
+                }
+            }
         }
 
         viewer.setChart(c);
@@ -347,7 +372,7 @@ public class CurvePloter extends JPanel {
         XYChart c = new XYChart(this.getPreferredSize().width, 100);
 
         // Set the plotarea with the same horizontal position as that in the main chart for alignment.
-        c.setPlotArea(55, 0, c.getWidth() - 80, c.getHeight() - 1, 0xc0d8ff, -1, 0x888888,
+        c.setPlotArea(startXposition, 0, c.getWidth() - 80, c.getHeight() - 1, 0xc0d8ff, -1, 0x888888,
                 Chart.Transparent, 0xffffff);
 
         // Set the x axis stem to transparent and the label font to 10pt Arial
@@ -485,14 +510,14 @@ public class CurvePloter extends JPanel {
     //
     private void chartViewer1_MouseMovedPlotArea(MouseEvent e) {
         ChartViewer viewer = (ChartViewer) e.getSource();
-        trackLineLegend((XYChart) viewer.getChart(), viewer.getPlotAreaMouseX());
+        trackLineLegend((XYChart) viewer.getChart(), viewer.getPlotAreaMouseX(), viewer.getPlotAreaMouseY());
         viewer.updateDisplay();
     }
 
     //
     // Draw the track line with legend
     //
-    private void trackLineLegend(XYChart c, int mouseX) {
+    private void trackLineLegend(XYChart c, int mouseX, int mouseY) {
         // Clear the current dynamic layer and get the DrawArea object to draw on it.
         DrawArea d = c.initDynamicLayer();
 
@@ -504,8 +529,6 @@ public class CurvePloter extends JPanel {
         int xCoor = c.getXCoor(xValue);
 
         // Draw a vertical track line at the x-position
-        d.vline(plotArea.getTopY(), plotArea.getBottomY(), xCoor, d.dashLineColor(0x000000, 0x0101));
-
         // Container to hold the legend entries
         ArrayList legendEntries = new ArrayList();
 
@@ -531,6 +554,9 @@ public class CurvePloter extends JPanel {
 
                     // Draw a track dot for data points within the plot area
                     int yCoor = c.getYCoor(dataSet.getPosition(xIndex), dataSet.getUseYAxis());
+                    d.vline(plotArea.getTopY(), plotArea.getBottomY(), xCoor, d.dashLineColor(0x000000, 0x0101));
+                    d.hline(plotArea.getLeftX(), plotArea.getRightX(), yCoor, d.dashLineColor(0x000000, 0x0101));
+
                     if ((yCoor >= plotArea.getTopY()) && (yCoor <= plotArea.getBottomY())) {
                         d.circle(xCoor, yCoor, 4, 4, color, color);
                     }
@@ -540,12 +566,14 @@ public class CurvePloter extends JPanel {
 
         // Create the legend by joining the legend entries
         Collections.reverse(legendEntries);
+        String position = "startIndex: " + startPoint + ",  endIndex: " + endPoint + ",  shownPoints: " + shownPoint;
         String legendText = "<*block,maxWidth=" + plotArea.getWidth() + "*><*block*><*font=Arial Bold*>["
-                + c.xAxis().getFormattedLabel(xValue, "mmm dd, yyyy") + "]<*/*>        " + Chart.stringJoin(
+                + c.xAxis().getFormattedLabel(xValue, "mmm dd, yyyy       ") +  position + "]<*/*> " +"        " + Chart.stringJoin(
                 legendEntries, "        ") + "<*/*>";
 
+        Logs.e(legendText);
         // Display the legend on the top of the plot area
-        TTFText t = d.text(legendText, "Arial", 8);
+        TTFText t = d.text(legendText, "Arial", 12);
         t.draw(plotArea.getLeftX() + 5, plotArea.getTopY() - 3, 0x000000, Chart.BottomLeft);
     }
 
@@ -555,6 +583,30 @@ public class CurvePloter extends JPanel {
 
     public void setChartTitle(String chartTitle) {
         this.chartTitle = chartTitle;
+    }
+
+    public String getStartPoint() {
+        return startPoint;
+    }
+
+    public void setStartPoint(String startPoint) {
+        this.startPoint = startPoint;
+    }
+
+    public String getEndPoint() {
+        return endPoint;
+    }
+
+    public void setEndPoint(String endPoint) {
+        this.endPoint = endPoint;
+    }
+
+    public int getShownPoint() {
+        return shownPoint;
+    }
+
+    public void setShownPoint(int shownPoint) {
+        this.shownPoint = shownPoint;
     }
 
 }

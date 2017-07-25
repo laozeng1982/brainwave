@@ -8,9 +8,9 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="BrainWave.jar" size="785851" download="eager" />
+    <jar href="BrainWave.jar" size="786826" download="eager" />
     <jar href="lib/ChartDirector.jar" size="2320299" download="eager" />
-    <jar href="lib/Tools.jar" size="263480" download="eager" />
+    <jar href="lib/Tools.jar" size="263953" download="eager" />
     <jar href="lib/commons-beanutils-1.7.0.jar" size="188671" download="eager" />
     <jar href="lib/commons-collections-3.2.jar" size="571259" download="eager" />
     <jar href="lib/commons-lang-2.4.jar" size="261809" download="eager" />

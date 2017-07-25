@@ -20,12 +20,13 @@ import javafx.stage.WindowEvent;
  * @author JianGe
  */
 public class BrainWave extends Application {
-    
-    public static Stage stage;
+
+    public static Stage appStage;
+    public static Parent root;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
 
         Scene scene = new Scene(root);
 
@@ -44,8 +45,8 @@ public class BrainWave extends Application {
 
             Platform.exit();
         });
-        
-        stage = primaryStage;
+
+        appStage = primaryStage;
     }
 
     /**

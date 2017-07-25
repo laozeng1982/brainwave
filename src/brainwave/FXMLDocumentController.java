@@ -20,14 +20,17 @@ import datamodel.AllCurvesHolder;
 import datamodel.SingleFileCurveSets;
 import java.awt.Dimension;
 import java.io.File;
+import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
+import javafx.scene.input.ScrollEvent;
 import javafx.util.Callback;
 import javax.swing.ImageIcon;
 import tools.files.IOHelper;
@@ -50,7 +53,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ToggleGroup zoomToggle;
     @FXML
-    private ComboBox<Integer> cmBxScale;
+    private  ComboBox cmBxScale;
     @FXML
     private ToggleButton pointTglBtn;
     @FXML
@@ -58,13 +61,10 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ToggleButton zoomOutTglBtn;
 
-    private static AllCurvesHolder allCurvesHolder = new AllCurvesHolder();
+    private static final AllCurvesHolder allCurvesHolder = new AllCurvesHolder();
     private TreeItem<String> rootItem;
-
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
+    private final JFxFileChooser jFxFileChooser = new JFxFileChooser(BrainWave.appStage);
+    private ArrayList<String> scaleList = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -74,7 +74,8 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void onOpenAscii(ActionEvent event) {
-        JFxFileChooser jFxFileChooser = new JFxFileChooser(BrainWave.stage, null, "All Ascii", "*txt");
+
+        jFxFileChooser.customize(null, "All Ascii", "*txt");
         File openedFile = jFxFileChooser.selectSingleFile(null, true);
         if (openedFile != null) {
             Logs.e(openedFile.getAbsoluteFile().toString());
@@ -91,7 +92,7 @@ public class FXMLDocumentController implements Initializable {
             }
 
             if (!hasTab) {
-                rootItem.getChildren().add(new TreeItem<String>(fileName));
+                rootItem.getChildren().add(new TreeItem<>(fileName));
             }
 
             createdTab(fileName);
@@ -130,6 +131,13 @@ public class FXMLDocumentController implements Initializable {
     private void init() {
 
         //Init TreeView
+        ArrayList<String> pointsList = new ArrayList<>();
+        pointsList.add("0");
+        pointsList.add("10000");
+
+        cmBxScale.setItems(FXCollections.observableArrayList(pointsList));
+        cmBxScale.getSelectionModel().selectFirst();
+
         rootItem = new TreeItem<>("Data Sets");
         rootItem.setExpanded(true);
         dateSetsTreeView.setRoot(rootItem);
@@ -228,5 +236,21 @@ public class FXMLDocumentController implements Initializable {
         tab.setContent(swingNode);
         drawTablePane.getTabs().add(tab);
         drawTablePane.getSelectionModel().select(tab);
+    }
+
+    private void onScroll(ScrollEvent event) {
+
+        SwingNode swNode = (SwingNode) drawTablePane.getSelectionModel().getSelectedItem().getContent();
+        CurvePloter cp = (CurvePloter) swNode.getContent();
+
+        //    scaleList.add(drawTablePane.getSelectionModel().getSelectedItem().get)
+        Logs.e("onScroll here");
+    }
+
+    public void showPoints(int point) {
+        String Points = String.valueOf(point);
+        cmBxScale.getItems().add(Points);
+        cmBxScale.getSelectionModel().select(Points);
+        Logs.e(Points);
     }
 }

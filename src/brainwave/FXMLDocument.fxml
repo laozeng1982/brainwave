@@ -53,7 +53,8 @@
             </ToggleButton>
             <ToggleButton fx:id="zoomInTglBtn" mnemonicParsing="false" onAction="#onMouseType" text="ZoomIn" toggleGroup="$zoomToggle" />
             <ToggleButton fx:id="zoomOutTglBtn" layoutX="274.0" layoutY="14.0" mnemonicParsing="false" onAction="#onMouseType" text="ZoomOut" toggleGroup="$zoomToggle" />
-            <ComboBox fx:id="cmBxScale" editable="true" prefHeight="23.0" prefWidth="72.0" />
+            <ComboBox fx:id="cmBxScale" editable="true" prefHeight="23.0" prefWidth="120.0" />
+            <Label text="Points" />
             <Separator layoutX="202.0" layoutY="10.0" orientation="VERTICAL" prefHeight="30.0" />
             <Button layoutX="157.0" layoutY="14.0" mnemonicParsing="false" onAction="#onExit" text="Exit" textFill="#f80505" />
         </items>
