@@ -16,7 +16,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
 import javax.swing.SwingUtilities;
-import ChartDirector.*;
 import datamodel.AllCurvesHolder;
 import datamodel.SingleFileCurveSets;
 import java.awt.Dimension;
@@ -131,7 +130,7 @@ public class FXMLDocumentController implements Initializable {
     private void init() {
 
         //Init TreeView
-        rootItem = new TreeItem<String>("Data Sets");
+        rootItem = new TreeItem<>("Data Sets");
         rootItem.setExpanded(true);
         dateSetsTreeView.setRoot(rootItem);
 
